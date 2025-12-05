@@ -173,12 +173,20 @@
         pCtx.clearRect(0, 0, width, height); // 清除特效层
         updateParticles(); // 更新雪花
 
+        // --- 新增调试代码：画出骨骼线 ---
+        // 只有这里画出了绿色的线，才说明 AI 看到手了
+        if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+             for (const landmarks of results.multiHandLandmarks) {
+                 drawConnectors(pCtx, landmarks, HAND_CONNECTIONS, {color: '#00FF00', lineWidth: 2});
+                 drawLandmarks(pCtx, landmarks, {color: '#FF0000', lineWidth: 1});
+             }
+        }
+        // -----------------------------
+
         if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
             cursor.style.display = 'none';
             return;
         }
-
-        const landmarks = results.multiHandLandmarks; // 所有手的数据
         
         // 2. 双手逻辑 (缩放)
         if (landmarks.length === 2) {
